@@ -1,0 +1,10 @@
+spring:
+    application:
+        name: chatpot-be
+    ai:
+        vertex:
+            ai:
+                gemini:
+                    project-id: ${GEMINI_PROJECT_ID}
+                    location: asia-northeast3
+
