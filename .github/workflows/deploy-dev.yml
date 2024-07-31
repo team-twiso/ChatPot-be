@@ -1,13 +1,13 @@
-name: deploy
+name: deploy-dev
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "develop" ]
   pull_request:
     branches: [ "develop" ]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     env:
       GEMINI_PROJECT_ID: ${{ secrets.GEMINI_PROJECT_ID }}
@@ -21,11 +21,11 @@ jobs:
           distribution: 'temurin'
       - name: Gradle Wrapper 실행 권한 추가
         run: chmod +x gradlew
-      - name: application.properties 덮어쓰기
+      - name: application-dev.yml 덮어쓰기
         run: |
           cd ./src/main/resources
-          touch ./application.yml
-          echo "${{ secrets.PROPERTIES }}" > ./application.yml
+          touch ./application-dev.yml
+          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
         shell: bash
       - name: Gradle로 빌드(CI)
         run: ./gradlew build
@@ -35,16 +35,16 @@ jobs:
           username: ${{ secrets.DOCKER_USER_NAME }}
           password: ${{ secrets.DOCKER_USER_PW }}
       - name: 이미지 빌드
-        run: docker build -t ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be .
+        run: docker build -t ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be-dev -f Dockerfile.dev .
       - name: 도커허브에 이미지 푸시
-        run: docker push ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
+        run: docker push ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be-dev
       - name: AWS EC2에 ssh 접속 후 배포
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.AWS_IP }}
+          host: ${{ secrets.AWS_IP_DEV }}
           port: 22
           username: ubuntu
-          key: ${{ secrets.AWS_KEY }}
+          key: ${{ secrets.AWS_KEY_DEV }}
           script: |
-            docker pull ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
+            docker pull ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be-dev
             docker-compose up -d
