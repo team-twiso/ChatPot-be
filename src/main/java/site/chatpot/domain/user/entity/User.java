@@ -16,8 +16,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import site.chatpot.domain.common.BaseEntity;
+import site.chatpot.domain.common.entity.BaseEntity;
 import site.chatpot.domain.image.entity.Image;
+import site.chatpot.domain.user.entity.enums.Gender;
 
 @Entity
 @Table(name = "users")

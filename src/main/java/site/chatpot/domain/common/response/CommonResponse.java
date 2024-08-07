@@ -1,4 +1,4 @@
-package site.chatpot.domain.common;
+package site.chatpot.domain.common.response;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,10 +1,11 @@
-package site.chatpot.domain.common.exception;
+package site.chatpot.domain.common.exception.exceptionhandler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import site.chatpot.domain.common.CommonResponse;
+import site.chatpot.domain.common.exception.BaseException;
+import site.chatpot.domain.common.response.CommonResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

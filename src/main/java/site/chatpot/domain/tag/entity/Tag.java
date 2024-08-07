@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.chatpot.domain.common.CreateTimeEntity;
+import site.chatpot.domain.common.entity.CreateTimeEntity;
 
 @Entity
 @Table(name = "tags")

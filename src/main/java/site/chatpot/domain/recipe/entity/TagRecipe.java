@@ -13,7 +13,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.chatpot.domain.common.CreateTimeEntity;
+import site.chatpot.domain.common.entity.CreateTimeEntity;
 import site.chatpot.domain.tag.entity.Tag;
 
 @Entity

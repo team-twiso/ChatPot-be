@@ -1,4 +1,4 @@
-package site.chatpot.domain.user.entity;
+package site.chatpot.domain.user.entity.enums;
 
 import lombok.Getter;
 

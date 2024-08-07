@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.chatpot.domain.common.BaseEntity;
+import site.chatpot.domain.common.entity.BaseEntity;
 import site.chatpot.domain.image.entity.Image;
 import site.chatpot.domain.recipe.entity.Recipe;
 import site.chatpot.domain.user.entity.User;

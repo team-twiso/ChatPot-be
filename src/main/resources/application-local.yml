@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://h2:1521/~./chatpot
+    url: jdbc:h2:tcp://localhost/~/chatpot
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -13,5 +13,5 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
