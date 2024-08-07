@@ -8,19 +8,19 @@ import site.chatpot.domain.common.exception.ErrorCode;
 
 @Getter
 @NoArgsConstructor
-public class CommonResponse<T> {
+public class Api<T> {
     private static final String SUCCESS_MESSAGE = "SUCCESS";
     private ResponseHeader header;
     private T result;
 
     @Builder
-    private CommonResponse(ResponseHeader header, T result) {
+    private Api(ResponseHeader header, T result) {
         this.header = header;
         this.result = result;
     }
 
-    public static CommonResponse<Void> success() {
-        return CommonResponse.<Void>builder()
+    public static Api<Void> success() {
+        return Api.<Void>builder()
                 .header(ResponseHeader.builder()
                         .isSuccessful(true)
                         .resultCode(HttpStatus.OK.value())
@@ -28,8 +28,8 @@ public class CommonResponse<T> {
                 .build();
     }
 
-    public static <T> CommonResponse<T> successWithData(T data) {
-        return CommonResponse.<T>builder()
+    public static <T> Api<T> successWithData(T data) {
+        return Api.<T>builder()
                 .header(ResponseHeader.builder()
                         .isSuccessful(true)
                         .resultCode(HttpStatus.OK.value())
@@ -38,8 +38,8 @@ public class CommonResponse<T> {
                 .build();
     }
 
-    public static CommonResponse<Void> fail(ErrorCode errorCode) {
-        return CommonResponse.<Void>builder()
+    public static Api<Void> fail(ErrorCode errorCode) {
+        return Api.<Void>builder()
                 .header(ResponseHeader.builder()
                         .isSuccessful(false)
                         .resultCode(errorCode.getCode())
@@ -47,8 +47,8 @@ public class CommonResponse<T> {
                 .build();
     }
 
-    public static CommonResponse<Void> fail(ErrorCode errorCode, String message) {
-        return CommonResponse.<Void>builder()
+    public static Api<Void> fail(ErrorCode errorCode, String message) {
+        return Api.<Void>builder()
                 .header(ResponseHeader.builder()
                         .isSuccessful(false)
                         .resultCode(errorCode.getCode())
