@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import site.chatpot.config.S3Properties;
 import site.chatpot.domain.common.exception.ApiException;
 import site.chatpot.domain.common.exception.ErrorCode;
 import site.chatpot.domain.image.entity.Image;
@@ -20,12 +20,7 @@ import site.chatpot.domain.image.entity.Image;
 public class ImageService {
     private final ImageRepository imageRepository;
     private final S3Operations s3Operations;
-
-    @Value("${spring.cloud.aws.s3.bucket}")
-    private String BUCKET_NAME;
-
-    @Value("${spring.cloud.aws.s3.folder}")
-    private String BUCKET_FOLDER;
+    private final S3Properties s3Properties;
 
     @Transactional
     public Image save(MultipartFile multipartFile, String dirName) {
@@ -54,10 +49,11 @@ public class ImageService {
         String uuid = UUID.randomUUID().toString();
         String uniqueFileName = uuid + "_" + Objects.requireNonNull(originalFileName).replaceAll("\\s", "_");
 
-        String fileName = BUCKET_FOLDER + "/" + dirName + "/" + uniqueFileName;
+        String fileName = s3Properties.getFolder() + "/" + dirName + "/" + uniqueFileName;
         try {
-            S3Resource resource = s3Operations.upload(BUCKET_NAME, fileName, multipartFile.getInputStream(),
-                    ObjectMetadata.builder().contentType(multipartFile.getContentType()).build());
+            S3Resource resource =
+                    s3Operations.upload(s3Properties.getBucket(), fileName, multipartFile.getInputStream(),
+                            ObjectMetadata.builder().contentType(multipartFile.getContentType()).build());
             return resource.getURL().toString();
         } catch (IOException e) {
             throw new ApiException(ErrorCode.COMMON_SYSTEM_ERROR, "S3 업로드 중 오류가 발생했습니다.");
@@ -66,6 +62,6 @@ public class ImageService {
 
     private void deleteS3(String url) {
         String object = extractObject(url);
-        s3Operations.deleteObject(BUCKET_NAME, object);
+        s3Operations.deleteObject(s3Properties.getBucket(), object);
     }
 }
