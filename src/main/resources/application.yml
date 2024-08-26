@@ -19,7 +19,8 @@ spring:
       stack:
         auto: false
       s3:
-        bucket: chatpot
+        bucket: ${S3_BUCKET_NAME}
+        folder: ${S3_FOLDER_NAME}
   servlet:
     multipart:
       max-file-size: 10MB

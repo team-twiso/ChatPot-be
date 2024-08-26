@@ -8,20 +8,24 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import site.chatpot.domain.common.exception.ApiException;
 import site.chatpot.domain.common.exception.ErrorCode;
 import site.chatpot.domain.image.entity.Image;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ImageService {
-    private static final String BUCKET_NAME = "chatpot";
     private final ImageRepository imageRepository;
     private final S3Operations s3Operations;
+
+    @Value("${spring.cloud.aws.s3.bucket}")
+    private String BUCKET_NAME;
+
+    @Value("${spring.cloud.aws.s3.folder}")
+    private String BUCKET_FOLDER;
 
     @Transactional
     public Image save(MultipartFile multipartFile, String dirName) {
@@ -50,8 +54,7 @@ public class ImageService {
         String uuid = UUID.randomUUID().toString();
         String uniqueFileName = uuid + "_" + Objects.requireNonNull(originalFileName).replaceAll("\\s", "_");
 
-        String fileName = dirName + "/" + uniqueFileName;
-        log.info("fileName: {}", fileName);
+        String fileName = BUCKET_FOLDER + "/" + dirName + "/" + uniqueFileName;
         try {
             S3Resource resource = s3Operations.upload(BUCKET_NAME, fileName, multipartFile.getInputStream(),
                     ObjectMetadata.builder().contentType(multipartFile.getContentType()).build());
