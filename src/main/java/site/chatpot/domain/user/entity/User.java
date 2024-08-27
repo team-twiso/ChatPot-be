@@ -27,6 +27,7 @@ import site.chatpot.domain.user.entity.enums.Gender;
 @SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id=?")
 @SQLRestriction("is_deleted = false")
 public class User extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -55,7 +56,7 @@ public class User extends BaseEntity {
     private boolean isDeleted = Boolean.FALSE;
 
     @OneToOne
-    @JoinColumn(name = "image_id", nullable = false)
+    @JoinColumn(name = "image_id")
     private Image image;
 
     @Builder

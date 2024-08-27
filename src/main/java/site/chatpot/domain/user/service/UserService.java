@@ -23,7 +23,7 @@ public class UserService {
     @Transactional
     public UserRegisterResponse register(UserRegisterRequest request) {
         Image image = null;
-        if (!request.profile().isEmpty()) {
+        if (request.profile() != null) {
             image = imageService.save(request.profile(), PROFILE_IMAGE_PATH);
         }
         User user = userConverter.toEntity(request, image);

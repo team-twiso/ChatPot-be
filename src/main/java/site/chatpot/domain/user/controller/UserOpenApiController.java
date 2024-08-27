@@ -23,5 +23,4 @@ public class UserOpenApiController {
         UserRegisterResponse response = userService.register(request);
         return Api.successWithData(response);
     }
-
 }
