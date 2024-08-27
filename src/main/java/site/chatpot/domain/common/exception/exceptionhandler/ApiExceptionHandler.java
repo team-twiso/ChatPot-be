@@ -14,7 +14,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = ApiException.class)
     public ResponseEntity<Api<Void>> handleApiException(ApiException e) {
-        log.error("", e);
+        log.error(e.getMessage(), e);
         HttpStatus status = HttpStatus.valueOf(e.getErrorCode().getCode());
         Api<Void> response = Api.fail(e.getErrorCode(), e.getMessage());
         return new ResponseEntity<>(response, status);

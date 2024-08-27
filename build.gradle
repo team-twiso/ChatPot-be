@@ -40,6 +40,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     // DB
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // S3
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.1'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
 }
