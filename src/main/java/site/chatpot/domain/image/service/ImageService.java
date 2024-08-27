@@ -49,10 +49,10 @@ public class ImageService {
         String uuid = UUID.randomUUID().toString();
         String uniqueFileName = uuid + "_" + Objects.requireNonNull(originalFileName).replaceAll("\\s", "_");
 
-        String fileName = s3Properties.getFolder() + "/" + dirName + "/" + uniqueFileName;
+        String fileName = s3Properties.folder() + "/" + dirName + "/" + uniqueFileName;
         try {
             S3Resource resource =
-                    s3Operations.upload(s3Properties.getBucket(), fileName, multipartFile.getInputStream(),
+                    s3Operations.upload(s3Properties.bucket(), fileName, multipartFile.getInputStream(),
                             ObjectMetadata.builder().contentType(multipartFile.getContentType()).build());
             return resource.getURL().toString();
         } catch (IOException e) {
@@ -62,6 +62,6 @@ public class ImageService {
 
     private void deleteS3(String url) {
         String object = extractObject(url);
-        s3Operations.deleteObject(s3Properties.getBucket(), object);
+        s3Operations.deleteObject(s3Properties.bucket(), object);
     }
 }
