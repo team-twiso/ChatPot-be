@@ -15,3 +15,7 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+  cloud:
+    aws:
+      s3:
+        folder: local
