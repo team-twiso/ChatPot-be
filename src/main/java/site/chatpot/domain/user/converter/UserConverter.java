@@ -13,11 +13,11 @@ import site.chatpot.domain.user.entity.User;
 @Converter
 public class UserConverter {
 
-    public User toEntity(UserRegisterRequest request, Image image) {
+    public User toEntity(UserRegisterRequest request, Image image, String encodedPassword) {
         return Optional.ofNullable(request)
                 .map(it -> User.builder()
                         .email(request.email())
-                        .password(request.password())
+                        .password(encodedPassword)
                         .name(request.name())
                         .nickname(request.nickname())
                         .birthDate(LocalDate.parse(request.birthDate()))

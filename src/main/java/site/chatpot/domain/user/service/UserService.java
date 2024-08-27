@@ -2,6 +2,7 @@ package site.chatpot.domain.user.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import site.chatpot.domain.image.entity.Image;
 import site.chatpot.domain.image.service.ImageService;
@@ -19,6 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ImageService imageService;
     private final UserConverter userConverter;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserRegisterResponse register(UserRegisterRequest request) {
@@ -26,7 +28,8 @@ public class UserService {
         if (request.profile() != null) {
             image = imageService.save(request.profile(), PROFILE_IMAGE_PATH);
         }
-        User user = userConverter.toEntity(request, image);
+        String encodedPassword = passwordEncoder.encode(request.password());
+        User user = userConverter.toEntity(request, image, encodedPassword);
         userRepository.save(user);
         return userConverter.toResponse(user);
     }
