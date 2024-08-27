@@ -5,6 +5,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static site.chatpot.utils.TestUtils.userRegisterRequest;
+import static site.chatpot.utils.TestUtils.userRegisterResponse;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +21,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import site.chatpot.config.SecurityConfig;
 import site.chatpot.domain.user.controller.request.UserRegisterRequest;
 import site.chatpot.domain.user.controller.response.UserRegisterResponse;
-import site.chatpot.domain.user.entity.enums.Gender;
 import site.chatpot.domain.user.service.UserService;
 
 @WebMvcTest(value = {UserOpenApiController.class, SecurityConfig.class})
@@ -42,7 +43,7 @@ class UserOpenApiControllerTest {
         //when
         ResultActions perform = mockMvc.perform(
                 multipart("/open-api/users/register")
-                        .file("profile", "test".getBytes())
+                        .file("profile", request.profile().getBytes())
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .param("email", request.email())
                         .param("password", request.password())
@@ -65,7 +66,7 @@ class UserOpenApiControllerTest {
         //when
         ResultActions perform = mockMvc.perform(
                 multipart("/open-api/users/register")
-                        .file("profile", "test".getBytes())
+                        .file("profile", request.profile().getBytes())
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .param("email", request.email())
                         .param("name", request.name())
@@ -89,7 +90,7 @@ class UserOpenApiControllerTest {
         //when
         ResultActions perform = mockMvc.perform(
                 multipart("/open-api/users/register")
-                        .file("profile", "test".getBytes())
+                        .file("profile", request.profile().getBytes())
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .param("email", "emailnaver.com")
                         .param("name", request.name())
@@ -107,19 +108,4 @@ class UserOpenApiControllerTest {
 
     }
 
-    private UserRegisterResponse userRegisterResponse() {
-        return new UserRegisterResponse(1L);
-    }
-
-    private UserRegisterRequest userRegisterRequest() {
-        return new UserRegisterRequest(
-                "a@naver.com",
-                "asdfasdf!@",
-                "홍길동",
-                "동길홍",
-                "1990-01-01",
-                Gender.valueOf("MALE"),
-                null
-        );
-    }
 }
