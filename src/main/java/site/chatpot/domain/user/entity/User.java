@@ -33,7 +33,7 @@ public class User extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -42,7 +42,7 @@ public class User extends BaseEntity {
     @Column(length = 50, nullable = false)
     private String name;
 
-    @Column(length = 30, nullable = false)
+    @Column(length = 30, nullable = false, unique = true)
     private String nickname;
 
     @Column(name = "birth_date", nullable = false)
@@ -60,8 +60,10 @@ public class User extends BaseEntity {
     private Image image;
 
     @Builder
-    public User(String email, String password, String name, String nickname, LocalDate birthDate, Gender gender,
-                Image image) {
+    public User(
+            String email, String password, String name, String nickname, LocalDate birthDate, Gender gender,
+            Image image
+    ) {
         this.email = email;
         this.password = password;
         this.name = name;
