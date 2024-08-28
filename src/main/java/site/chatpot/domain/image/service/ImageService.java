@@ -1,6 +1,7 @@
 package site.chatpot.domain.image.service;
 
 import io.awspring.cloud.s3.ObjectMetadata;
+import io.awspring.cloud.s3.S3Exception;
 import io.awspring.cloud.s3.S3Operations;
 import io.awspring.cloud.s3.S3Resource;
 import jakarta.transaction.Transactional;
@@ -18,6 +19,7 @@ import site.chatpot.domain.image.entity.Image;
 @Service
 @RequiredArgsConstructor
 public class ImageService {
+
     private final ImageRepository imageRepository;
     private final S3Operations s3Operations;
     private final S3Properties s3Properties;
@@ -53,9 +55,9 @@ public class ImageService {
         try {
             S3Resource resource =
                     s3Operations.upload(s3Properties.bucket(), fileName, multipartFile.getInputStream(),
-                            ObjectMetadata.builder().contentType(multipartFile.getContentType()).build());
+                                        ObjectMetadata.builder().contentType(multipartFile.getContentType()).build());
             return resource.getURL().toString();
-        } catch (IOException e) {
+        } catch (IOException | S3Exception e) {
             throw new ApiException(ErrorCode.COMMON_SYSTEM_ERROR, "S3 업로드 중 오류가 발생했습니다.");
         }
     }
