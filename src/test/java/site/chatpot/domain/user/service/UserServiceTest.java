@@ -1,6 +1,7 @@
 package site.chatpot.domain.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -27,6 +28,8 @@ import site.chatpot.domain.user.controller.request.UserRegisterRequest;
 import site.chatpot.domain.user.controller.response.UserRegisterResponse;
 import site.chatpot.domain.user.converter.UserConverter;
 import site.chatpot.domain.user.entity.User;
+import site.chatpot.domain.user.exception.EmailAlreadyExistsException;
+import site.chatpot.domain.user.exception.NicknameAlreadyExistsException;
 import site.chatpot.domain.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -95,5 +98,28 @@ class UserServiceTest {
         verify(imageService, times(0)).save(any(MultipartFile.class), any(String.class));
     }
 
+    @Test
+    @DisplayName("회원 가입 - 이미 존재하는 닉네임")
+    void register_exist_nickname() throws Exception {
+        //given
+        UserRegisterRequest request = userRegisterRequestNotImage();
+        when(userRepository.existsByEmail(any(String.class))).thenReturn(false);
+        when(userRepository.existsByNickname(any(String.class))).thenReturn(true);
+        //when & then
+        assertThatThrownBy(() -> userService.register(request))
+                .isInstanceOf(NicknameAlreadyExistsException.class)
+                .hasMessage("이미 사용중인 닉네임입니다.");
+    }
 
+    @Test
+    @DisplayName("회원 가입 - 이미 존재하는 이메일")
+    void register_exist_email() throws Exception {
+        //given
+        UserRegisterRequest request = userRegisterRequestNotImage();
+        when(userRepository.existsByEmail(any(String.class))).thenReturn(true);
+        //when & then
+        assertThatThrownBy(() -> userService.register(request))
+                .isInstanceOf(EmailAlreadyExistsException.class)
+                .hasMessage("이미 가입된 이메일입니다.");
+    }
 }
