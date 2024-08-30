@@ -60,7 +60,7 @@ class UserServiceTest {
         when(imageService.save(any(MultipartFile.class), any(String.class))).thenReturn(image());
         when(userConverter.toEntity(any(UserRegisterRequest.class), any(Image.class), any(String.class)))
                 .thenReturn(user(request, encodedPassword));
-        when(userConverter.toResponse(any(User.class))).thenReturn(userRegisterResponse());
+        when(userConverter.toRegisterResponse(any(User.class))).thenReturn(userRegisterResponse());
         when(userRepository.save(any(User.class))).thenReturn(user(request, encodedPassword));
         when(userRepository.existsByEmail(any(String.class))).thenReturn(false);
         when(userRepository.existsByNickname(any(String.class))).thenReturn(false);
@@ -74,7 +74,7 @@ class UserServiceTest {
         verify(userRepository, times(1)).existsByNickname(any(String.class));
         verify(imageService, times(1)).save(any(MultipartFile.class), any(String.class));
         verify(userConverter, times(1)).toEntity(any(UserRegisterRequest.class), any(Image.class), any(String.class));
-        verify(userConverter, times(1)).toResponse(any(User.class));
+        verify(userConverter, times(1)).toRegisterResponse(any(User.class));
         verify(passwordEncoder, times(1)).encode(request.password());
     }
 
@@ -87,7 +87,7 @@ class UserServiceTest {
         String encodedPassword = encoder.encode(request.password());
         when(userConverter.toEntity(any(UserRegisterRequest.class), eq(null), any(String.class)))
                 .thenReturn(user(request, encodedPassword));
-        when(userConverter.toResponse(any(User.class))).thenReturn(userRegisterResponse());
+        when(userConverter.toRegisterResponse(any(User.class))).thenReturn(userRegisterResponse());
         when(userRepository.save(any(User.class))).thenReturn(user(request, encodedPassword));
         when(userRepository.existsByEmail(any(String.class))).thenReturn(false);
         when(userRepository.existsByNickname(any(String.class))).thenReturn(false);

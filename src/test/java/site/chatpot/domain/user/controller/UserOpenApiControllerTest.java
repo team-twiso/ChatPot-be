@@ -2,6 +2,7 @@ package site.chatpot.domain.user.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -15,15 +16,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import site.chatpot.config.SecurityConfig;
+import site.chatpot.config.security.SecurityConfig;
+import site.chatpot.config.security.jwt.JwtAuthenticationFilter;
+import site.chatpot.config.security.jwt.JwtUtils;
 import site.chatpot.domain.user.controller.request.UserRegisterRequest;
 import site.chatpot.domain.user.controller.response.UserRegisterResponse;
 import site.chatpot.domain.user.service.UserService;
 
-@WebMvcTest(value = {UserOpenApiController.class, SecurityConfig.class})
+@WebMvcTest(controllers = UserOpenApiController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {SecurityConfig.class, JwtAuthenticationFilter.class, JwtUtils.class}))
 @ExtendWith(MockitoExtension.class)
 class UserOpenApiControllerTest {
 
@@ -35,6 +43,7 @@ class UserOpenApiControllerTest {
 
     @Test
     @DisplayName("회원가입 성공")
+    @WithMockUser
     void signUpSuccess() throws Exception {
         //given
         UserRegisterRequest request = userRegisterRequest();
@@ -51,6 +60,7 @@ class UserOpenApiControllerTest {
                         .param("nickname", request.nickname())
                         .param("birthDate", request.birthDate())
                         .param("gender", request.gender().name())
+                        .with(csrf())
         );
         //then
         perform
@@ -60,6 +70,7 @@ class UserOpenApiControllerTest {
 
     @Test
     @DisplayName("회원가입 실패 - 파라미터 누락")
+    @WithMockUser
     void signUpFailInvalidParameter() throws Exception {
         //given
         UserRegisterRequest request = userRegisterRequest();
@@ -72,7 +83,9 @@ class UserOpenApiControllerTest {
                         .param("name", request.name())
                         .param("nickname", request.nickname())
                         .param("birthDate", request.birthDate())
-                        .param("gender", request.gender().name()));
+                        .param("gender", request.gender().name())
+                        .with(csrf())
+        );
         //then
         perform
                 .andExpect(status().isBadRequest())
@@ -84,6 +97,7 @@ class UserOpenApiControllerTest {
 
     @Test
     @DisplayName("회원가입 실패 - 이메일 양식 불일치")
+    @WithMockUser
     void signUpFailInvalidEmail() throws Exception {
         //given
         UserRegisterRequest request = userRegisterRequest();
@@ -97,7 +111,8 @@ class UserOpenApiControllerTest {
                         .param("nickname", request.nickname())
                         .param("password", request.password())
                         .param("birthDate", request.birthDate())
-                        .param("gender", request.gender().name()));
+                        .param("gender", request.gender().name())
+                        .with(csrf()));
         //then
         perform
                 .andExpect(status().isBadRequest())
