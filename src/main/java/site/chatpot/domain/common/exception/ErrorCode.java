@@ -12,6 +12,9 @@ public enum ErrorCode {
     COMMON_ENTITY_NOT_FOUND(404, "존재하지 않는 엔티티입니다."),
     COMMON_ILLEGAL_STATUS(400, "잘못된 상태값입니다."),
     COMMON_ALREADY_EXISTS(400, "이미 존재하는 값입니다."),
+    // security
+    SECURITY_UNAUTHORIZED(401, "인증되지 않은 사용자입니다."),
+    SECURITY_FORBIDDEN(403, "권한이 없습니다."),
     ;
 
     private final int code;

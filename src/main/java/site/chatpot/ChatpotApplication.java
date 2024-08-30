@@ -2,11 +2,10 @@ package site.chatpot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import site.chatpot.config.S3Properties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
-@EnableConfigurationProperties(S3Properties.class)
+@ConfigurationPropertiesScan
 public class ChatpotApplication {
     public static void main(String[] args) {
         SpringApplication.run(ChatpotApplication.class, args);
