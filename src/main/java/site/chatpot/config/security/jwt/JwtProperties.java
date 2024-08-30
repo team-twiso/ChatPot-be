@@ -1,12 +1,10 @@
-package site.chatpot.utils;
+package site.chatpot.config.security.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "spring.jwt")
 public record JwtProperties(
-        AccessToken accessToken,
-        RefreshToken refreshToken,
-        String secretKey
+
 ) {
     public record AccessToken(
             String expiredAt

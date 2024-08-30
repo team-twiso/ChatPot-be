@@ -34,3 +34,9 @@ spring:
     hibernate:
       ddl-auto: create
     database-platform: org.hibernate.dialect.H2Dialect
+  jwt:
+    secret-key: JWT_SECRET_KEY
+    access-token:
+      expired-at: 1800
+    refresh-token:
+      expired-at: 86400
