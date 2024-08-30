@@ -1,15 +1,18 @@
 package site.chatpot.domain.user.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import site.chatpot.config.security.auth.UserDto;
+import site.chatpot.config.security.jwt.JwtUtils;
 import site.chatpot.domain.image.entity.Image;
 import site.chatpot.domain.image.service.ImageService;
 import site.chatpot.domain.user.controller.request.UserLoginRequest;
 import site.chatpot.domain.user.controller.request.UserRegisterRequest;
 import site.chatpot.domain.user.controller.response.UserLoginResponse;
 import site.chatpot.domain.user.controller.response.UserRegisterResponse;
+import site.chatpot.domain.user.controller.response.UserResponse;
 import site.chatpot.domain.user.converter.UserConverter;
 import site.chatpot.domain.user.entity.User;
 import site.chatpot.domain.user.exception.EmailAlreadyExistsException;
@@ -17,7 +20,6 @@ import site.chatpot.domain.user.exception.NicknameAlreadyExistsException;
 import site.chatpot.domain.user.exception.PasswordNotMatchedException;
 import site.chatpot.domain.user.exception.UserNotFoundException;
 import site.chatpot.domain.user.repository.UserRepository;
-import site.chatpot.utils.JwtUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +43,7 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(request.password());
         User user = userConverter.toEntity(request, image, encodedPassword);
         userRepository.save(user);
-        return userConverter.toResponse(user);
+        return userConverter.toRegisterResponse(user);
     }
 
     @Transactional
@@ -52,6 +54,13 @@ public class UserService {
         String accessToken = jwtUtils.generateToken(user.getEmail(), "accessToken");
         String refreshToken = jwtUtils.generateToken(user.getEmail(), "refreshToken");
         return userConverter.toLoginResponse(accessToken, refreshToken);
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse getUser(UserDto userDto) {
+        User user = userRepository.getUser(userDto.email())
+                .orElseThrow(UserNotFoundException::new);
+        return userConverter.toResponse(user);
     }
 
     private void validatePassword(String request, String password) {
